@@ -9,6 +9,9 @@ RUN apt-get update \
  && apt-get clean \
  && rm -r /var/lib/apt/lists/*
 
+# Install nano
+RUN apt update \
+ && apt install nano
 
 # Configure Nginx and apply fix for very long server names
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf \
@@ -29,6 +32,8 @@ COPY network_internal.conf /etc/nginx/
 
 RUN { \
       echo 'client_max_body_size 1024m;'; \
+      echo 'proxy_connect_timeout 10m;'; \
+      echo 'proxy_read_timeout 10m;'; \
     } > /etc/nginx/conf.d/catalyst.conf
 
 COPY . /app/
